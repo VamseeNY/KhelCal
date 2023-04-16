@@ -4,7 +4,7 @@ import pyrebase
 import os
 st.set_page_config(layout="wide",page_title="KhelCalc")
 
-d=ast.literal_eval(os.environ["data"])
+d=ast.literal_eval(os.environ["d"])
 firebaseConfig=ast.literal_eval(os.environ["firebaseConfig"])
 
 
