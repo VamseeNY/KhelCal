@@ -1,12 +1,19 @@
 import streamlit as st 
-import ast
-
-
+import pandas as pd
+import pyrebase
 st.set_page_config(layout="wide",page_title="KhelCalc")
 
 
-
 d=ast.literal_eval(st.secrets["d"])
+
+
+firebaseConfig=ast.literal_eval(st.secrets["firebaseConfig"])
+
+
+firebase = pyrebase.initialize_app(firebaseConfig)
+db=firebase.database()
+
+
 
 def calc(targ,sp,w,tm):
   ans=[]
@@ -18,17 +25,36 @@ def calc(targ,sp,w,tm):
 
     min=int((fin-int(fin))*60)
     if tm<fin:
-        s="Insufficient time for sport: "+i
+        s=[0,i]
     else:
-        s="Indulge in "+i+" for "+str(int(fin))+" hours and "+str(min+1)+" minutes"
+        s=[int(fin),min+1,i]
     ans.append(s)
   
   return ans
 
 
+def push(data):
+    datad={'activity':data[1],'time':data[3]}
+    db.child(int(data[0])).push(datad) 
+
+def dataview(data):
+  stuff=db.child(data[0]).get()
+  output=[i.val() for i in stuff.each()]
+  frequency = {}
+  for item in output:
+      for activity in item['activity']:
+          if activity in frequency:
+              frequency[activity] += 1
+          else:
+              frequency[activity] = 1
+  for i in list(frequency.keys()):
+    #frequency[i]=[i for i in range(frequency[i]+1)]
+    frequency[i]=[frequency[i]]
+  return(frequency)
+  
+
+
 header=st.container()
-
-
 with header:
     itms, txt = st.columns([1,1])
     with itms:
@@ -39,8 +65,17 @@ with header:
         calcount=st.number_input("Enter target calories")
         time=st.number_input("Enter available hours in hours")
         pref=st.multiselect("Enter your preferred sports",d.keys())
-        for i in calc(calcount,list(pref),weight*2.205,time):
-            st.text(i)    
+        if all([weight,calcount,time,pref])!=0:
+          st.text("You could indulge in:")
+          for i in calc(calcount,list(pref),weight*2.205,time):
+              st.text(str(i[-1])+'for '+str(i[0])+' hours '+'and '+str(i[1])+' minutes')    
+          
+          push([calcount,list(pref),weight*2.205,time])
+          st.write("Users with similar calorie goals also played these sports")
+          st.bar_chart(data=dataview([int(calcount)]),use_container_width=True)
+          
+
+
     with txt:
         st.write("Playing sports is a great way to stay physically active and healthy, but it's important to keep safety in mind to avoid injury. ")
         st.write("Here are some basic safety precautions for playing any sport:")
