@@ -1,43 +1,12 @@
 import streamlit as st 
+import ast
 
 
 st.set_page_config(layout="wide",page_title="KhelCalc")
 
 
-d={'Cycling-light(10-11.9mph)': 1.234853445,
- 'Cycling-moderate(12-13.9mph)': 1.647825266,
- 'Cycling-vigorous(14-15.9mph)': 2.059443081,
- 'Running-slow(5mph) ': 1.647825266,
- 'Running-moderate(7mph)': 2.368156442,
- 'Running-vigorous(10mph)': 3.294973528,
- 'Track and field(shotput/discus)': 0.82323563,
- 'Track and field(high jump/pole vault)': 1.234853445,
- 'Track and field(hurdles)': 2.059443081,
- 'Badminton': 0.92749409,
- 'Basketball-competitive': 1.647825266,
- 'Basketball-casual': 1.234853445,
- 'Cricket': 1.02972154,
- 'Handball': 2.471060896,
- 'Handball-team': 1.647825266,
- 'Hockey(Field)': 1.647825266,
- 'Skipping rope-fast': 2.471060896,
- 'Skipping rope-moderate': 2.059443081,
- 'Skipping rope-slow': 1.647825266,
- 'Soccer-competitive': 2.059443081,
- 'Soccer-casual': 1.441339355,
- 'Squash': 2.471060896,
- 'Table tennis': 0.82323563,
- 'Tennis-doubles': 1.234853445,
- 'Tennis-singles': 1.647825266,
- 'Volleyball-competitive': 1.647825266,
- 'Volleyball-casual': 0.617426722,
- 'Backpacking/Hiking with pack': 1.441339355,
- 'Hiking/cross country': 1.234853445,
- 'Walking-moderate(3.0 mph)': 0.679710997,
- 'Walking-brisk pace(3.5 mph)': 0.782615451,
- 'Walking-very brisk (4.0 mph)': 1.02972154,
- 'Swimming-freestyle': 1.441339355,
- 'Swimming-leisurely': 1.234853445}
+
+d=ast.literal_eval(st.secrets["d"])
 
 def calc(targ,sp,w,tm):
   ans=[]
