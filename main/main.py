@@ -1,13 +1,11 @@
 import streamlit as st 
 import pandas as pd
 import pyrebase
+import os
 st.set_page_config(layout="wide",page_title="KhelCalc")
 
-
-d=ast.literal_eval(st.secrets["d"])
-
-
-firebaseConfig=ast.literal_eval(st.secrets["firebaseConfig"])
+d=ast.literal_eval(os.environ["data"])
+firebaseConfig=ast.literal_eval(os.environ["firebaseConfig"])
 
 
 firebase = pyrebase.initialize_app(firebaseConfig)
