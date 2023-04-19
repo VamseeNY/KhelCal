@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import pyrebase
 import os
+import ast
 st.set_page_config(layout="wide",page_title="KhelCalc")
 
 d=ast.literal_eval(os.environ["d"])
